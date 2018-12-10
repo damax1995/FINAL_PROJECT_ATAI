@@ -99,6 +99,7 @@ patrollingRadius(64).
         .length(FOVObjects, Length);
         if (Length > 0) {
             ///?debug(Mode); if (Mode<=1) { .println("HAY ", Length, " OBJETOS A MI ALREDEDOR:\n", FOVObjects); }
+			//medikuak priorizatu hemen?
         };    
         -look_response(_)[source(M)];
         -+fovObjects(FOVObjects);
@@ -195,9 +196,9 @@ patrollingRadius(64).
     <-  +task_priority("TASK_NONE",0);
         +task_priority("TASK_GIVE_MEDICPAKS", 500);
         +task_priority("TASK_GIVE_AMMOPAKS", 0);
-        +task_priority("TASK_GIVE_BACKUP", 0);
+        +task_priority("TASK_GIVE_BACKUP", 1000);
         +task_priority("TASK_GET_OBJECTIVE",2000);
-        +task_priority("TASK_ATTACK", 2000);
+        +task_priority("TASK_ATTACK", 2500);
         +task_priority("TASK_RUN_AWAY", 1500);
         +task_priority("TASK_GOTO_POSITION", 750);
         +task_priority("TASK_PATROLLING", 500);
