@@ -7,13 +7,14 @@ manager("Manager").
 team("ALLIED").
 // Type of troop.
 type("CLASS_FIELDOPS").
-
-
-
+objectivePackTaken(off).
+returnHome(0).
 
 
 
 { include("jgomas.asl") }
+
+priority(5000).
 
 
 
@@ -41,10 +42,38 @@ type("CLASS_FIELDOPS").
  * <em> It's very useful to overload this plan. </em>
  * 
  */
+
+
+ +followFlag(X, Y, Z)[source(M)] 
+ <- ?priority(P);
+  !add_task(task(P, "TASK_GOTO_POSITION", "Manager", pos(X, Y, Z), ""));
+  -+state(standing);                  
+    -+priority(P+1);
+    //create_medic_pack;
+ .
+
+
+
 +!get_agent_to_aim
 <-  ?debug(Mode); if (Mode<=2) { .println("Looking for agents to aim."); }
 ?fovObjects(FOVObjects);
 .length(FOVObjects, Length);
+
+
+if (objectivePackTaken(on)) {
+    if (returnHome(RH) & (RH == 0)) {
+      !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(155, 0, 133), ""));
+      -+task_priority("TASK_GIVE_MEDICPAKS", 0);
+      -+returnHome(1);
+    }
+    ?my_position(X, Y, Z);
+          
+      .my_team("medic_ALLIED", E2);
+      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content2);
+      .send_msg_with_conversation_id(E2, tell, Content2, "FLAG");
+  }
+
+
 
 ?debug(Mode); if (Mode<=1) { .println("El numero de objetos es:", Length); }
 

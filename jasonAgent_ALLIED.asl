@@ -40,12 +40,42 @@ type("CLASS_SOLDIER").
 * <em> It's very useful to overload this plan. </em>
 * 
 */  
+
+
+ +followFlag(X, Y, Z)[source(M)] 
+ <- ?priority(P);
+  !add_task(task(P, "TASK_GOTO_POSITION", "Manager", pos(X, Y, Z), ""));
+  -+state(standing);                  
+    -+priority(P+1);
+    create_medic_pack;
+ .
+
+
 +!get_agent_to_aim
 <-  ?debug(Mode); if (Mode<=2) { .println("Looking for agents to aim."); }
 ?fovObjects(FOVObjects);
 .length(FOVObjects, Length);
 
 ?debug(Mode); if (Mode<=1) { .println("El numero de objetos es:", Length); }
+
+
+if (objectivePackTaken(on)) {
+    if (returnHome(RH) & (RH == 0)) {
+      !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(155, 0, 133), ""));
+      -+task_priority("TASK_GIVE_MEDICPAKS", 0);
+      -+returnHome(1);
+    }
+    ?my_position(X, Y, Z);
+          
+      .my_team("medic_ALLIED", E2);
+      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content2);
+      .send_msg_with_conversation_id(E2, tell, Content2, "FLAG");
+
+      .my_team("fieldops_ALLIED", E3);
+      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content3);
+      .send_msg_with_conversation_id(E3, tell, Content3, "FLAG");
+  }
+
 
 if (Length > 0) {
     +bucle(0);
