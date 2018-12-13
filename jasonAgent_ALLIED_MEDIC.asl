@@ -69,7 +69,20 @@ if (objectivePackTaken(on)) {
       .my_team("fieldops_ALLIED", E2);
       .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content2);
       .send_msg_with_conversation_id(E2, tell, Content2, "FLAG");
-  }
+
+      .my_team("backup_ALLIED", E3);
+      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content3);
+      .send_msg_with_conversation_id(E3, tell, Content3, "FLAG");
+
+      .my_team("medic_ALLIED", E4);
+      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content4);
+      .send_msg_with_conversation_id(E4, tell, Content4, "FLAG");
+}
+else{
+    ?flag(X,Y,Z);
+    !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(X, Y, Z), ""));
+    -+returnhome(0);
+}
 
 
 
@@ -137,6 +150,30 @@ if (Length > 0) {
         
                 ?debug(Mode); if (Mode<=2) { .println("Aiming an ally. . .", MyTeam, " ", .number(MyTeam) , " ", Team, " ", .number(Team)); }
                 +aimed_agent(Object);
+
+                +position(invalid);
+                +loop(0);
+                while(position(invalid) & loop(i) & i<2){
+                  ?my_position(X, Y, Z);
+                  if(i == 0){
+                    check_position(pos(X + 5, Y, Z + 5));
+                    ?position(P);
+                    if(position(valid)){
+                      X = X + 5;
+                      Z = Z + 5;
+                    }
+                  }
+                  else{
+                    check_position(pos(X + 5, Y, Z + 5));
+                    ?position(P);
+                    if(position(valid)){
+                      X = X - 5;
+                      Z = Z - 5;
+                    }
+                  }
+                }
+                -loop(_);
+                !add_task(task(P, "TASK_GOTO_POSITION", "Manager", pos(X, Y, Z), ""));
                 -+aimed("false");
                 
             }
@@ -376,6 +413,9 @@ if (Length > 0) {
 
    ?my_position(X,Y,Z);
    +base(X,Y,Z);
+
+   ?objective(ObjectiveX, ObjectiveY, ObjectiveZ);
+   +flag(ObjectiveX, ObjectiveY, ObjectiveZ);
 
    .  
 

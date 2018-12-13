@@ -68,11 +68,33 @@ if (objectivePackTaken(on)) {
       -+returnHome(1);
     }
     ?my_position(X, Y, Z);
-          
+
       .my_team("medic_ALLIED", E2);
-      .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content2);
-      .send_msg_with_conversation_id(E2, tell, Content2, "FLAG");
-  }
+      .length(E2, T);
+      if(T > 0){
+        .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content2);
+        .send_msg_with_conversation_id(E2, tell, Content2, "FLAG");
+      }
+
+      .my_team("backup_ALLIED", E3);
+      .length(E3, T);
+      if(T > 0){
+        .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content3);
+        .send_msg_with_conversation_id(E3, tell, Content3, "FLAG");
+      }
+
+      .my_team("medic_ALLIED", E4);
+      .length(E1, T);
+      if(T > 0){
+        .concat("followFlag(",X, ", ", Y, ", ", Z, ")", Content4);
+        .send_msg_with_conversation_id(E4, tell, Content4, "FLAG");
+      }
+}
+else{
+    ?flag(X,Y,Z);
+    !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(X, Y, Z), ""));
+    -+returnhome(0);
+}
 
 
 
@@ -140,6 +162,30 @@ if (Length > 0) {
         
                 ?debug(Mode); if (Mode<=2) { .println("Aiming an ally. . .", MyTeam, " ", .number(MyTeam) , " ", Team, " ", .number(Team)); }
                 +aimed_agent(Object);
+
+                +position(invalid);
+                +loop(0);
+                while(position(invalid) & loop(i) & i<2){
+                  ?my_position(X, Y, Z);
+                  if(i == 0){
+                    check_position(pos(X + 5, Y, Z + 5));
+                    ?position(P);
+                    if(position(valid)){
+                      X = X + 5;
+                      Z = Z + 5;
+                    }
+                  }
+                  else{
+                    check_position(pos(X + 5, Y, Z + 5));
+                    ?position(P);
+                    if(position(valid)){
+                      X = X - 5;
+                      Z = Z - 5;
+                    }
+                  }
+                }
+                -loop(_);
+                !add_task(task(P, "TASK_GOTO_POSITION", "Manager", pos(X, Y, Z), ""));
                 -+aimed("false");
                 
             }
@@ -245,7 +291,7 @@ if (Length > 0) {
         +task_priority("TASK_GIVE_AMMOPAKS", 2000);
         +task_priority("TASK_GIVE_BACKUP", 0);
         +task_priority("TASK_GET_OBJECTIVE",1000);
-        +task_priority("TASK_ATTACK", 1000);
+        +task_priority("TASK_ATTACK", 6000);
         +task_priority("TASK_RUN_AWAY", 1500);
         +task_priority("TASK_GOTO_POSITION", 750);
         +task_priority("TASK_PATROLLING", 500);
@@ -328,8 +374,11 @@ if (Length > 0) {
           
          .my_team("fieldops_ALLIED", E1);
          //.println("Mi equipo intendencia: ", E1 );
-         .concat("cfa(",X, ", ", Y, ", ", Z, ", ", Ar, ")", Content1);
-         .send_msg_with_conversation_id(E1, tell, Content1, "CFA");
+         .length(E1, T);
+         if(T > 0){
+          .concat("cfa(",X, ", ", Y, ", ", Z, ", ", Ar, ")", Content1);
+          .send_msg_with_conversation_id(E1, tell, Content1, "CFA");
+        }
        
        
        }
@@ -342,9 +391,11 @@ if (Length > 0) {
           
          .my_team("medic_ALLIED", E2);
          //.println("Mi equipo medico: ", E2 );
-         .concat("cfm(",X, ", ", Y, ", ", Z, ", ", Hr, ")", Content2);
-         .send_msg_with_conversation_id(E2, tell, Content2, "CFM");
-
+         .length(E2, T);
+         if(T > 0){
+          .concat("cfm(",X, ", ", Y, ", ", Z, ", ", Hr, ")", Content2);
+          .send_msg_with_conversation_id(E2, tell, Content2, "CFM");
+          }
        }
        .
        
@@ -379,6 +430,9 @@ if (Length > 0) {
 
    ?my_position(X,Y,Z);
    +base(X,Y,Z);
+
+   ?objective(ObjectiveX, ObjectiveY, ObjectiveZ);
+   +flag(ObjectiveX, ObjectiveY, ObjectiveZ);
 
    .   
 
