@@ -59,7 +59,8 @@ priority(5000).
 
 if (objectivePackTaken(on)) {
     if (returnHome(RH) & (RH == 0)) {
-      !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(155, 0, 133), ""));
+      ?base(X,Y,Z);
+      !add_task(task(5000, "TASK_GOTO_POSITION", M, pos(X, Y, Z), ""));
       -+task_priority("TASK_GIVE_MEDICPAKS", 0);
       -+returnHome(1);
     }
@@ -371,5 +372,10 @@ if (Length > 0) {
 /////////////////////////////////
 
 +!init
-   <- ?debug(Mode); if (Mode<=1) { .println("YOUR CODE FOR init GOES HERE.")}.  
+   <- ?debug(Mode); if (Mode<=1) { .println("YOUR CODE FOR init GOES HERE.")}
+
+   ?my_position(X,Y,Z);
+   +base(X,Y,Z);
+
+   .  
 
